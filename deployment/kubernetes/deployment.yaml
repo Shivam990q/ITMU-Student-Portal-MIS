@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: itmu-mis-backend
+  labels:
+    app: itmu-mis
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: itmu-mis
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: itmu-mis
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: itmu-mis-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: itmu-mis-secrets
+              key: SECRET_KEY
+        - name: DEBUG
+          value: "False"
+        - name: DB_NAME
+          value: itmu_mis
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: itmu-mis-secrets
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: itmu-mis-secrets
+              key: DB_PASSWORD
+        - name: DB_HOST
+          value: postgres-service
+        - name: DB_PORT
+          value: "5432"
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: itmu-mis-frontend
+  labels:
+    app: itmu-mis
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: itmu-mis
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: itmu-mis
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: itmu-mis-frontend:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  serviceName: postgres-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: itmu_mis
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: itmu-mis-secrets
+              key: DB_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: itmu-mis-secrets
+              key: DB_PASSWORD
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi 

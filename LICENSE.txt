@@ -1,0 +1,22 @@
+PROPRIETARY SOFTWARE LICENSE AGREEMENT
+
+Copyright (c) 2025 ITM University, Gwalior
+All Rights Reserved
+Developed by Shivam Gupta
+
+THIS SOFTWARE IS THE PROPERTY OF ITM UNIVERSITY. THE SOFTWARE IS PROVIDED "AS IS",
+WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+
+STRICTLY PROHIBITED:
+- Unauthorized use, copying, modification, or distribution of this software
+- Reverse engineering, decompilation, or disassembly of the software
+- Use of the software by any individual or entity other than ITM University
+- Commercial exploitation of the software or any of its parts
+
+This software is developed exclusively for ITM University's internal use. All rights,
+title, and interest in and to this software remain with ITM University.
+
+Unauthorized access, use, or distribution is subject to legal action and prosecution
+to the maximum extent possible under law.
+
+For permission requests, please contact: vcoffice@itmuniversity.ac.in 
